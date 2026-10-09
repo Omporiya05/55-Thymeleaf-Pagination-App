@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Employee Details - Pagination</title>
+	<style>
+		/* Modern Table Styling */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+		}
+
+		/* Pagination Container Setup */
+		.pagination-container {
+			display: flex;
+			align-items: center;
+			/* Vertically centers the text and buttons */
+			width: 100%;
+		}
+
+		/* Centers the numbered items right in the middle */
+		.page-numbers {
+			margin: 0 auto;
+			display: flex;
+			gap: 5px;
+			/* Adds clean spacing between page numbers */
+		}
+
+		/* Highlight the current active page button */
+		.page-numbers a.active {
+			background-color: #007bff;
+			color: white;
+			border-color: #007bff;
+			pointer-events: none;
+			/* Disables clicking the current page */
+		}
+
+		/* Styling buttons to look clean and uniform */
+		.pagination-container a {
+			text-decoration: none;
+			padding: 8px 16px;
+			background-color: #f1f1f1;
+			color: #333;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		.pagination-container a:hover {
+			background-color: #ddd;
+		}
+	</style>
+</head>
+
+<body>
+	<table border="1">
+		<tr>
+			<th>EMPNO</th>
+			<th>ENAME</th>
+			<th>SALARY</th>
+			<th>DEPTNO</th>
+		</tr>
+
+		<tr th:each="emp : ${empList}">
+			<td th:text="${emp.empno}"></td>
+			<td th:text="${emp.ename}"></td>
+			<td th:text="${emp.salary}"></td>
+			<td th:text="${emp.deptno}"></td>
+		</tr>
+	</table>
+
+	<div class="pagination-container">
+		<span th:if="${hasPrevious}" class="prev-link">
+			<a th:href="@{/view(pageNumber=${pageNumber-1})}">Previous</a>
+		</span>
+		
+		<!-- totalPage > 0              : totalPage is Greater than then only show then Page Number .-->
+		<!-- th:classappend="${...}"    : Adds the active CSS class to the page number if the condition is true -->
+		
+		<div class="page-numbers" th:if="${totalPages > 0}">
+			<a th:each="pageIndex : ${#numbers.sequence(startPage,endPage)}"
+			   th:href="@{/view(pageNumber=${pageIndex})}"
+			   th:text="${pageIndex}"
+			   th:classappend="${pageIndex == pageNumber} ? 'active': '' ">
+			</a>
+		</div>
+
+		<span th:if="${hasNext}" class="next-link">
+			<a th:href="@{/view(pageNumber=${pageNumber+1})}">Next</a>
+		</span>
+	</div>
+</body>
+
+</html>
